@@ -12,3 +12,48 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
+
+#facebook-login-button {
+  background-color: #4267b2;
+  background: #4267b2;
+}
+
+.custom-control-label::before,
+.custom-control-label::after {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  border-color: #4A25DE;
+  background-color: #4A25DE;
+}
+
+.probootstrap-main-site-logo {
+  width: unset !important;
+}
+
+.form-control:focus {
+  outline: unset;
+  box-shadow: unset;
+}
+
+.probootstrap-main .card-columns .card a:before,
+.probootstrap-main .card-columns .card {
+  background: unset !important;
+}
+
+.like-button,
+.comment-button {
+  color: #859196;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.btn.btn-primary:hover, .btn.btn-primary:focus, .btn.btn-primary:active {
+  border-color: #979797 !important;
+  background: #979797 !important;
+}

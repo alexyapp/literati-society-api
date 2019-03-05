@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Socialite;
+Use App\Models\User;
+use App\Models\SocialIdentity;
 
 class LoginController extends Controller
 {
@@ -35,5 +38,60 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+    * Redirect the user to the provider's authentication page.
+    *
+    * @return \Illuminate\Http\Response
+    */
+    public function redirectToProvider($provider = 'facebook')
+    {
+        return Socialite::driver($provider)->redirect();
+    }
+
+    /**
+     * Obtain the user information from the provider.
+     *
+     * @return void
+     */
+    public function handleProviderCallback($provider = 'facebook')
+    {
+        try {
+            $user = Socialite::driver($provider)->user();
+        } catch (\Exception $e) {
+            return redirect('/login');
+        }
+
+        $authUser = $this->findOrCreateUser($user, $provider);
+        Auth::login($authUser, true);
+        return redirect($this->redirectTo);
+    }
+
+    public function findOrCreateUser($providerUser, $provider)
+    {
+        $account = SocialIdentity::whereProviderName($provider)
+                    ->whereProviderId($providerUser->getId())
+                    ->first();
+        
+        if ($account) {
+            return $account->user;
+        } else {
+            $user = User::whereEmail($providerUser->getEmail())->first();
+
+            if (!$user) {
+                $user = User::create([
+                    'email' => $providerUser->getEmail(),
+                    'name' => $providerUser->getName()
+                ]);
+            }
+
+            $user->identities()->create([
+                'provider_id' => $providerUser->getId(),
+                'provider_name' => $provider
+            ]);
+
+            return $user;
+        }
     }
 }
