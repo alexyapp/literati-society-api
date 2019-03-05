@@ -10708,3 +10708,9 @@ a.text-dark:focus {
   background: #979797 !important;
 }
 
+@media (max-width: 768px) {
+  .probootstrap-main.js-probootstrap-main {
+    padding-top: 76px;
+  }
+}
+
